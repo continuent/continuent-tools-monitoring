@@ -1,0 +1,95 @@
+# Copyright (C) 2014 Continuent, Inc.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License.  You may obtain
+# a copy of the License at
+# 
+#         http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+# License for the specific language governing permissions and limitations
+# under the License.
+#
+# Initial developer(s): Jeff Mace
+# Contributor(s):
+
+begin
+  require 'rubygems'
+  gem 'continuent-tools-core'
+rescue LoadError
+end
+
+require 'continuent-tools-core'
+
+class ContinuentToolsMonitoringJavaPID
+  include TungstenScript
+  
+  def main
+    opt(:wrapper_pid_path, "#{TI.root()}/#{CURRENT_RELEASE_DIRECTORY}/#{opt(:wrapper_pid_path)}")
+    
+    # Make sure the given process is still running
+    TU.debug("Look for a PID at #{opt(:wrapper_pid_path)}")
+    unless File.exists?(opt(:wrapper_pid_path))
+      raise "The requested process is not running"
+    end
+    
+    # Extract the PID for the Tanuki Wrapper process
+    wrapper_pid = TU.cmd_result("cat #{opt(:wrapper_pid_path)}")
+    
+    # Find the JVM PID by inspecting based on parent PID
+    jvm_pid = TU.cmd_result("ps -opid= --ppid=#{wrapper_pid}")
+    TU.output(jvm_pid)
+  end
+  
+  def configure
+    super()
+    
+    add_option(:component, {
+      :on => "--component String",
+      :help => "The Tungsten component to return a Java PID for"
+    })
+  end
+  
+  def validate
+    super()
+    
+    unless TU.is_valid?()
+      return TU.is_valid?()
+    end
+    
+    # Make sure that --component is a known value and the component
+    # is enabled for the current directory
+    case opt(:component).to_s()
+    when "tungsten-manager", "manager"
+      if TI.is_manager?()
+        opt(:wrapper_pid_path, "tungsten-manager/var/tmanager.pid")
+      else
+        TU.error("Unable to find a manager java PID because the manager is not enabled")
+      end
+    when "tungsten-replicator", "replicator"
+      if TI.is_replicator?()
+        opt(:wrapper_pid_path, "tungsten-replicator/var/treplicator.pid")
+      else
+        TU.error("Unable to find a replicator java PID because the replicator is not enabled")
+      end
+    when "tungsten-connector", "connector"
+      if TI.is_connector?()
+        opt(:wrapper_pid_path, "tungsten-connector/var/tconnector.pid")
+      else
+        TU.error("Unable to find a connector java PID because the connector is not enabled")
+      end
+    else
+      if opt(:component).to_s() == ""
+        TU.error("The --component argument is required and must be 'replicator', 'manager', or 'connector'")
+      else
+        TU.error("Unable to find a java pid for #{opt(:component)}")
+      end
+    end
+  end
+  
+  def script_name
+    "tungsten_java_pid"
+  end
+end
