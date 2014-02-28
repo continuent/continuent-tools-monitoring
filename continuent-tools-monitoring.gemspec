@@ -17,8 +17,8 @@
 
 Gem::Specification.new do |s|
   s.name        = 'continuent-tools-monitoring'
-  s.version     = '0.0.4'
-  s.date        = '2014-02-24'
+  s.version     = '0.0.5'
+  s.date        = Date.today.to_s
   s.summary     = "Continuent Tools core monitoring tools"
   s.authors     = ["Continuent"]
   s.email       = 'info@continuent.com'

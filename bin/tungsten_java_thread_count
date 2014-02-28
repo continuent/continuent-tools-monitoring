@@ -29,7 +29,7 @@ class ContinuentToolsMonitoringJavaThreadCount
   
   def main
     begin
-      pid = TU.tungsten_cmd_result("tungsten_java_pid --component=#{opt(:component)}")
+      pid = TU.tungsten_cmd_result("tungsten_java_pid --directory=#{TI.root()} --component=#{opt(:component)}")
     rescue CommandError => ce
       TU.debug(ce)
       return
@@ -75,8 +75,12 @@ class ContinuentToolsMonitoringJavaThreadCount
       return TU.is_valid?()
     end
     
+    unless TU.which("jstack")
+      TU.error("Unable to find the jstack command")
+    end
+    
     begin
-      TU.tungsten_cmd_result("tungsten_java_pid --component=#{opt(:component)} --validate")
+      TU.tungsten_cmd_result("tungsten_java_pid --directory=#{TI.root()} --component=#{opt(:component)} --validate")
     rescue CommandError => ce
       TU.debug(ce)
     end
