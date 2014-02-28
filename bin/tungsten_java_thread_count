@@ -28,9 +28,12 @@ class ContinuentToolsMonitoringJavaThreadCount
   include TungstenScript
   
   def main
-    TU.forward_cmd_results?(true)
-    pid = TU.cmd_result("tungsten_java_pid --component=#{opt(:component)}")
-    TU.forward_cmd_results?(false)
+    begin
+      pid = TU.tungsten_cmd_result("tungsten_java_pid --component=#{opt(:component)}")
+    rescue CommandError => ce
+      TU.debug(ce)
+      return
+    end
     
     commands = []
     commands << "egrep prio"
@@ -41,7 +44,13 @@ class ContinuentToolsMonitoringJavaThreadCount
       commands << "egrep #{opt(:match)}"
     end
     
-    count = TU.cmd_result("jstack #{pid} | #{commands.join("|")} | wc -l")
+    begin
+      count = TU.cmd_result("jstack #{pid} | #{commands.join("|")} | wc -l")
+    rescue CommandError => ce
+      TU.debug(ce)
+      TU.error("Unable to run #{ce.command}")
+    end
+    
     TU.output(count)
   end
   
@@ -64,6 +73,12 @@ class ContinuentToolsMonitoringJavaThreadCount
     
     unless TU.is_valid?()
       return TU.is_valid?()
+    end
+    
+    begin
+      TU.tungsten_cmd_result("tungsten_java_pid --component=#{opt(:component)} --validate")
+    rescue CommandError => ce
+      TU.debug(ce)
     end
   end
   
