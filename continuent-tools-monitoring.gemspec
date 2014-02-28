@@ -17,13 +17,14 @@
 
 Gem::Specification.new do |s|
   s.name        = 'continuent-tools-monitoring'
-  s.version     = '0.0.1'
+  s.version     = '0.0.2'
   s.date        = '2014-02-24'
   s.summary     = "Continuent Tools core monitoring tools"
   s.authors     = ["Continuent"]
   s.email       = 'info@continuent.com'
   s.files       = Dir.glob("{bin,lib}/**/*") + %w(LICENSE README.md)
   s.executables << "tungsten_java_pid"
+  s.executables << "tungsten_java_thread_count"
   s.homepage    =
     'https://github.com/continuent/continuent-tools-monitoring'
   s.license       = 'Apache-2.0'
