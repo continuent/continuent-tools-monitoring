@@ -29,7 +29,7 @@ class ContinuentToolsMonitoringJavaThreadCount
   
   def main
     begin
-      pid = TU.tungsten_cmd_result("tungsten_java_pid --directory=#{TI.root()} --component=#{opt(:component)}")
+      pid = TU.tungsten_cmd_result("tungsten_java_pid --component=#{opt(:component)}")
     rescue CommandError => ce
       TU.debug(ce)
       return
@@ -80,7 +80,7 @@ class ContinuentToolsMonitoringJavaThreadCount
     end
     
     begin
-      TU.tungsten_cmd_result("tungsten_java_pid --directory=#{TI.root()} --component=#{opt(:component)} --validate")
+      TU.tungsten_cmd_result("tungsten_java_pid --component=#{opt(:component)} --validate")
     rescue CommandError => ce
       TU.debug(ce)
     end

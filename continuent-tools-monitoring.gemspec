@@ -17,7 +17,7 @@
 
 Gem::Specification.new do |s|
   s.name        = 'continuent-tools-monitoring'
-  s.version     = '0.0.5'
+  s.version     = '0.0.6'
   s.date        = Date.today.to_s
   s.summary     = "Continuent Tools core monitoring tools"
   s.authors     = ["Continuent"]
