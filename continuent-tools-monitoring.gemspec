@@ -17,9 +17,9 @@
 
 Gem::Specification.new do |s|
   s.name        = 'continuent-tools-monitoring'
-  s.version     = '0.0.6'
+  s.version     = '0.1.0'
   s.date        = Date.today.to_s
-  s.summary     = "Continuent Tools core monitoring tools"
+  s.summary     = "Continuent Tungsten tools core monitoring tools"
   s.authors     = ["Continuent"]
   s.email       = 'info@continuent.com'
   s.files       = Dir.glob("{bin,lib}/**/*") + %w(LICENSE README.md)
@@ -29,5 +29,5 @@ Gem::Specification.new do |s|
   s.homepage    =
     'https://github.com/continuent/continuent-tools-monitoring'
   s.license       = 'Apache-2.0'
-  s.add_runtime_dependency 'continuent-tools-core'
+  s.add_runtime_dependency 'continuent-tools-core', '>= 0.1.0'
 end
