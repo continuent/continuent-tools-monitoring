@@ -27,6 +27,34 @@ module TungstenNagiosMonitor
     end
   end
   
+  # Is the given value above the critical threshold
+  def is_critical?(value)
+    unless value.to_s() =~ /^[0-9\.]+$/
+      unknown("Unable to compare a non-numeric value : #{value}")
+    end
+    
+    check = value.to_s().to_f()
+    if check >= opt(:critical_level).to_f()
+      true
+    else
+      false
+    end
+  end
+  
+  # Is the given value above the warning threshold
+  def is_warning?(value)
+    unless value.to_s() =~ /^[0-9\.]+$/
+      unknown("Unable to compare a non-numeric value : #{value}")
+    end
+    
+    check = value.to_s().to_f()
+    if check >= opt(:warning_level).to_f()
+      true
+    else
+      false
+    end
+  end
+  
   # Build an output string when the value has passed
   def build_ok_message(value)
     "Value is OK (#{value})"
